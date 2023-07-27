@@ -55,24 +55,3 @@ class Prescription(BaseModel):
         }
       }
     }
-
-  address: str = Field(format = "contracts", chain = 11155111, contractType = "Collection2")
-  tokenId: int = Field(title = "Token", format = "tokens", chain = 11155111, contractField = "address")
-  amount: float
-
-  class Config:
-    schema_extra = {
-      "id": "bom-material",
-      "ui": {
-        "forms": {
-          "default": {
-            "type": "group", "class": "container", "contents": [
-              { "type": "field", "id": "address" },
-              { "type": "field", "id": "tokenId" },
-              { "type": "field", "id": "amount" },
-              { "type": "buttons", "submitText": "Add material", "cancel": True }
-            ]
-          }
-        }
-      }
-    }

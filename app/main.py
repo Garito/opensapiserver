@@ -23,6 +23,8 @@ async def prescription(data: models.Prescription) -> models.Prescription:
   logger.info(dumps(data.dict(), indent = 2))
   return data
 
+@app.get("/gallery/{context}")
+async def gallery(context: str = 'admin'):
   with open("./galleries.json") as f:
     json = loads(f.read())
   return json[context]
