@@ -1,1 +1,1 @@
-docker run --rm -p 8000:8000 schemaserver
+docker run --rm -p 8000:80 schemaserver

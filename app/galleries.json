@@ -1,0 +1,228 @@
+{
+  "admin": {
+    "types": {
+      "fungible": "return value.contentType === 'Collection2' && value.symbol",
+      "non-fungible": "return value.contentType === 'Collection2' && !value.symbol"
+    },
+    "cards": {
+      "fungible": {
+        "front": {
+          "type": "group", "class": "lt-card", "contents": [
+            {
+              "type": "group", "tag": "figure", "contents": [
+                { "type": "value", "key": "img", "args": { "format": "image" } }
+              ]
+            },
+            {
+              "type": "group", "class": "contents", "contents": [
+                {
+                  "type": "group", "class": "title", "contents": [
+                    {
+                      "type": "group", "tag": "span", "contents": [
+                        { "type": "value", "key": "name" }
+                      ]
+                    },
+                    {
+                      "type": "group", "tag": "small", "contents": [
+                        { "type": "value", "key": "symbol" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "group", "class": "data", "contents": [
+                    {
+                      "type": "group", "tag": "span", "class": "token-amount", "contents": [
+                        { "type": "value", "key": "amount" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "non-fungible": {
+        "front": {
+          "type": "group", "class": "lt-card", "contents": [
+            {
+              "type": "group", "tag": "figure", "contents": [
+                { "type": "value", "key": "img", "args": { "format": "image" } }
+              ]
+            },
+            {
+              "type": "group", "class": "contents", "contents": [
+                {
+                  "type": "group", "class": "title", "contents": [
+                    {
+                      "type": "group", "tag": "span", "contents": [
+                        { "type": "value", "key": "name" }
+                      ]
+                    },
+                    {
+                      "type": "clicker",
+                      "content": "<i class=\"fa-solid fa-circle-info\"></i>", "message": "toggle",
+                      "expression": "return value.description || value.properties?.length"
+                    }
+                  ]
+                },
+                {
+                  "type": "group", "class": "data", "contents": [
+                    {
+                      "type": "group", "tag": "span", "class": "token-amount", "contents": [
+                        { "type": "value", "key": "amount" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "back": {
+          "type": "group", "class": "lt-card back", "contents": [
+            {
+              "type": "group", "class": "contents", "contents": [
+                {
+                  "type": "group", "class": "title", "contents": [
+                    {
+                      "type": "group", "tag": "span", "contents": [
+                        { "type": "value", "key": "name" }
+                      ]
+                    },
+                    { "type": "clicker", "content": "<i class=\"fa-solid fa-circle-xmark\"></i>", "message": "toggle" }
+                  ]
+                },
+                {
+                  "type": "group", "tag": "p", "expression": "return value.description", "contents": [
+                    { "type": "value", "key": "description" }
+                  ]
+                },
+                {
+                  "type": "group", "tag": "p", "expression": "return value.description", "contents": [
+                    { "type": "value", "key": "properties", "args": { "format": "array" } }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "tokensSelector": {
+    "types": {
+      "fungible": "return value.contentType === 'Collection2' && value.symbol",
+      "non-fungible": "return value.contentType === 'Collection2' && !value.symbol"
+    },
+    "cards": {
+      "fungible": {
+        "selectable": true,
+        "front": {
+          "type": "group", "class": "lt-card", "contents": [
+            {
+              "type": "group", "tag": "figure", "contents": [
+                { "type": "value", "key": "img", "args": { "format": "image" } }
+              ]
+            },
+            {
+              "type": "group", "class": "contents", "contents": [
+                {
+                  "type": "group", "class": "title", "contents": [
+                    {
+                      "type": "group", "tag": "span", "contents": [
+                        { "type": "value", "key": "name" }
+                      ]
+                    },
+                    {
+                      "type": "group", "tag": "small", "contents": [
+                        { "type": "value", "key": "symbol" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "group", "class": "data", "contents": [
+                    {
+                      "type": "group", "tag": "span", "class": "token-amount", "contents": [
+                        { "type": "value", "key": "amount" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "non-fungible": {
+        "selectable": true,
+        "front": {
+          "type": "group", "class": "lt-card", "contents": [
+            {
+              "type": "group", "tag": "figure", "contents": [
+                { "type": "value", "key": "img", "args": { "format": "image" } }
+              ]
+            },
+            {
+              "type": "group", "class": "contents", "contents": [
+                {
+                  "type": "group", "class": "title", "contents": [
+                    {
+                      "type": "group", "tag": "span", "contents": [
+                        { "type": "value", "key": "name" }
+                      ]
+                    },
+                    {
+                      "type": "clicker",
+                      "content": "<i class=\"fa-solid fa-circle-info\"></i>", "message": "toggle",
+                      "expression": "return value.description || value.properties?.length"
+                    }
+                  ]
+                },
+                {
+                  "type": "group", "class": "data", "contents": [
+                    {
+                      "type": "group", "tag": "span", "class": "token-amount", "contents": [
+                        { "type": "value", "key": "amount" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "back": {
+          "type": "group", "class": "lt-card back", "contents": [
+            {
+              "type": "group", "class": "contents", "contents": [
+                {
+                  "type": "group", "class": "title", "contents": [
+                    {
+                      "type": "group", "tag": "span", "contents": [
+                        { "type": "value", "key": "name" }
+                      ]
+                    },
+                    { "type": "clicker", "content": "<i class=\"fa-solid fa-circle-xmark\"></i>", "message": "toggle" }
+                  ]
+                },
+                {
+                  "type": "group", "tag": "p", "expression": "return value.description", "contents": [
+                    { "type": "value", "key": "description" }
+                  ]
+                },
+                {
+                  "type": "group", "tag": "p", "expression": "return value.description", "contents": [
+                    { "type": "value", "key": "properties", "args": { "format": "array" } }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

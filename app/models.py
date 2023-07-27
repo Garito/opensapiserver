@@ -1,289 +1,78 @@
 from typing import Union, Optional
+from enum import Enum
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PositiveFloat
 
-class Fungible(BaseModel):
-  img: str = Field(format = "image")
-  name: str
-  symbol: str
-  amount: int
+class PrescriptionDetail(BaseModel):
+  product: str = Field(json_schema_extra = {"primaryKey": True})
+  amount: PositiveFloat
 
   class Config:
     schema_extra = {
-      "id": "fungible",
       "ui": {
-        "group": {
-          "type": "group", "id": "fungible-container",
-          "contents": [
-            { "type": "field", "id": "img" },
-            {
-              "type": "group", "class": "fields",
-              "contents": [
-                {
-                  "type": "group",
-                  "contents": [
-                    {
-                      "type": "group", "id": "identity",
-                      "contents": [
-                        { "type": "field", "id": "name" },
-                        { "type": "field", "id": "symbol" }
-                      ]
-                    },
-                    { "type": "field", "id": "amount" }
-                  ]
-                },
-                { "type": "buttons", "submitText": "Add token", "cancel": True }
-              ]
-            }
-          ]
-        },
-        "adder": "Fungible",
-        "cards": {
-          "collectionToken": {
-            "front": {
-              "type": "group", "class": "lt-card fungible collection-token",
-              "contents": [
-                {
-                  "type": "group", "tag": "figure",
-                  "contents": [
-                    { "type": "formValue", "field": "img" }
-                  ]
-                },
-                {
-                  "type": "group", "class": "contents",
-                  "contents": [
-                    {
-                      "type": "group", "class": "title",
-                      "contents": [
-                        {
-                          "type": "group", "tag": "h2",
-                          "contents": [
-                            { "type": "formValue", "field": "name" }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "group", "class": "data",
-                      "contents": [
-                        {
-                          "type": "group", "tag": "span", "class": "token-amount",
-                          "contents": [
-                            { "type": "formValue", "field": "amount" }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+        "product": {
+          "singular": "product",
+          "plural": "products",
+          # "fetch": "http://localhost:8000/products"
+          "crypto": [
+            { "chain": 80001, "contractAddress": "0xEdbd01E6746c03888aB271468122F20a2AB2cc32" },
+            { "chain": 80001, "contractAddress": "0xAC894D824CF3293C51965Fe52C0d2DE33fF53848" },
+            { "chain": 80001, "contractAddress": "0xD9Ca36A1Ed1CE974C4dC29450BAfd9237A6B2201" }
+          ],
+          "optionsArgs": {
+            "load": {"name": "collectionName", "json": "null"},
+            "value": {
+              "fields": ["contractAddress", "tokenId"],
+              "write": "{contractAddress}_{tokenId}",
+              "read": "(?<contractAddress>[0-9a-zA-Z]{42})_(?<tokenId>[0-9]*)"
+            },
+            "name": {
+              "fields": ["name", "collectionName"],
+              "write": "{name} @ {collectionName}"
             }
           }
         }
       }
     }
 
-class StringProperty(BaseModel):
-  name: str
-  value: str
+class Prescription(BaseModel):
+  id: str = Field(json_schema_extra = {"primaryKey": True})
+  date: datetime
+  wallet: str = Field(min_length = 42, max_length = 42, json_schema_extra = {"format": "wallet"}, placeholder = "Wallet's address", description = "You can use Metamask, the CoinBase or any other Walletconnect compatible wallet", alt_description = "This is the alternate description")
+  details: list[PrescriptionDetail]
+  note: Optional[str] = Field(max_length = 500, format = "html")
 
   class Config:
     schema_extra = {
-      "id": "string",
       "ui": {
-        "adder": "string",
-        "submitText": "Add string",
-        "cancel": True
-      }
-    }
-
-class NumberProperty(BaseModel):
-  name: str
-  value: int
-  max: int
-
-  class Config:
-    schema_extra = {
-      "id": "number",
-      "ui": {
-        "adder": "number"
-      }
-    }
-
-class RankProperty(BaseModel):
-  name: str
-  value: int
-  max: int
-
-  class Config:
-    schema_extra = {
-      "id": "rank",
-      "ui": {
-        "adder": "rank"
-      }
-    }
-
-class BoostProperty(BaseModel):
-  name: str
-  value: int
-  max: int
-
-  class Config:
-    schema_extra = {
-      "id": "boost",
-      "ui": {
-        "adder": "boost"
-      }
-    }
-
-class BoostPercentProperty(BaseModel):
-  name: str
-  value: int
-
-  class Config:
-    schema_extra = {
-      "id": "boostPercent",
-      "ui": {
-        "adder": "boost %"
-      }
-    }
-
-class DateProperty(BaseModel):
-  name: str
-  value: datetime
-
-  class Config:
-    schema_extra = {
-      "id": "date",
-      "ui": {
-        "adder": "date"
-      }
-    }
-
-class NonFungible(BaseModel):
-  img: str = Field(title = "Token's image", format = "image")
-  name: str
-  amount: int
-  description: Optional[str] = Field(max_length = 500, format = "html")
-  properties: list[Union[StringProperty, NumberProperty, RankProperty, BoostProperty, BoostPercentProperty, DateProperty]] = Field(id = "properties", json_schema_extra = {"format": "table"})
-
-  class Config:
-    schema_extra = {
-      "id": "non-fungible",
-      "ui": {
-        "group": {
-          "type": "group", "id": "non-fungible-container",
-          "contents": [
-            {
-              "type": "group", "class": "left",
-              "contents": [
-                { "type": "field", "id": "img" },
-                {
-                  "type": "group", "class": "main",
-                  "contents": [
-                    { "type": "field", "id": "name" },
-                    { "type": "field", "id": "amount" },
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "group", "class": "right",
-              "contents": [
-                { "type": "field", "id": "description" },
-                { "type": "field", "id": "properties" },
-                { "type": "buttons", "submitText": "Add token", "cancel": True }
-              ]
-            }
-          ]
-        },
-        "adder": "Non fungible",
-        "cards": {
-          "collectionToken": {
-            "front": {
-              "type": "group", "class": "lt-card non-fungible collection-token",
-              "contents": [
-                {
-                  "type": "group", "tag": "figure",
-                  "contents": [
-                    { "type": "formValue", "field": "img" }
-                  ]
-                },
-                {
-                  "type": "group", "class": "contents",
-                  "contents": [
-                    {
-                      "type": "group", "class": "title",
-                      "contents": [
-                        {
-                          "type": "group", "tag": "h2",
-                          "contents": [
-                            { "type": "formValue", "field": "name" }
-                          ]
-                        },
-                        {
-                          "type": "clicker",
-                          "content": '<i class="fa-solid fa-circle-info"></i>', "message": "toggle",
-                          "expression": "return value.description || value.properties.length"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "group", "class": "data",
-                      "contents": [
-                        {
-                          "type": "group", "tag": "span", "class": "token-amount",
-                          "contents": [
-                            { "type": "formValue", "field": "amount" }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            "back": {
-              "type": "group", "class": "lt-card back non-fungible collection-token",
-              "contents": [
-                {
-                  "type": "group", "class": "contents",
-                  "contents": [
-                    {
-                      "type": "group", "class": "title",
-                      "contents": [
-                        {
-                          "type": "group", "tag": "h2",
-                          "contents": [
-                            { "type": "formValue", "field": "name" }
-                          ]
-                        },
-                        {
-                          "type": "clicker",
-                          "content": '<i class="fa-solid fa-circle-xmark"></i>', "message": "toggle"
-                        }
-                      ]
-                    },
-                    { "type": "formValue", "field": "description" },
-                    { "type": "formValue", "field": "properties" }
-                  ]
-                }
-              ]
-            }
-          }
+        # "css": "https://cs.lateralthink.club/assets/css/prescriptions.css",
+        "css": "http://localhost:9000/assets/css/prescriptions.css",
+        "groups": {
+          "header": ["id", "date", "wallet"],
+          "details": ["details"],
+          "note": ["note"]
         }
       }
     }
 
-class Collection(BaseModel):
-  name: str
-  tokens: list[Union[Fungible, NonFungible]] = Field(json_schema_extra = {"format": "card", "mode": "collectionToken"})
+  address: str = Field(format = "contracts", chain = 11155111, contractType = "Collection2")
+  tokenId: int = Field(title = "Token", format = "tokens", chain = 11155111, contractField = "address")
+  amount: float
 
   class Config:
     schema_extra = {
-      "id": "collection",
+      "id": "bom-material",
       "ui": {
-        "submitText": "Deploy collection"
+        "forms": {
+          "default": {
+            "type": "group", "class": "container", "contents": [
+              { "type": "field", "id": "address" },
+              { "type": "field", "id": "tokenId" },
+              { "type": "field", "id": "amount" },
+              { "type": "buttons", "submitText": "Add material", "cancel": True }
+            ]
+          }
+        }
       }
     }
